@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dia Especial</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f8ff;
+            flex-direction: column;
+            text-align: center;
+            background-image: url('panda.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        
+        #form-container {
+            padding: 20px;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: opacity 1s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        #form-container img {
+            width: 150px;
+            margin-bottom: 20px;
+        }
+        
+        h1, h2, p {
+            color: #333;
+        }
+        
+        input {
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #aa89e7;
+            border-radius: 5px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            background-color: #0e5f80;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        
+        #content, #fridge-password-page, #message-page, #proposal-page {
+            display: none;
+            width: 90%;
+            max-width: 1000px;
+            text-align: center;
+            margin: 20px auto;
+        }
+        
+        .album {
+            margin-top: 50px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .photo-wrapper {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .photo-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .photo-wrapper:hover img {
+            transform: scale(1.05);
+        }
+        
+        .photo-wrapper::after {
+            content: "Te amo";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            font-size: 1.5em;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .photo-wrapper:hover::after {
+            opacity: 1;
+        }
+        
+        #countdown {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #d82343;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .heart {
+            position: fixed;
+            top: -10px;
+            font-size: 2em;
+            z-index: 1000;
+            animation: fall linear infinite;
+            pointer-events: none;
+            color: #e21818;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .album {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .album {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        #proposal-page {
+            max-width: 600px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        #proposal-page h1 {
+            color: #d82343;
+        }
+        
+        #proposal-page p {
+            font-size: 1.2em;
+            line-height: 1.6;
+        }
+        
+        .back-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #555;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="form-container">
+        <img src="ursinho.gif" alt="Ursinho" /> 
+        <h1>Qual foi a data em que nos conhecemos?</h1>
+        <form id="dateForm">
+            <input type="password" id="dateInput" placeholder="dd/mm/aaaa">
+            <button type="submit">Enviar</button>
+        </form>
+        <p id="message"></p>
+    </div>
+
+    <div id="content">
+        <div id="countdown"></div>
+        <div id="fridge-password-page">
+            <h1>Qual a frase dentro da nossa geladeira?</h1>
+            <form id="fridgeForm">
+                <input type="password" id="fridgeInput" placeholder="Digite a frase">
+                <button type="submit">Enviar</button>
+            </form>
+            <p id="fridgeMessage"></p>
+            <button class="back-button" onclick="goBack('fridge-password-page');">Voltar</button>
+        </div>
+        <h2>Nossas memórias</h2>
+        <div class="album"></div>
+    </div>
+
+    <div id="message-page">
+        <h2 style="color: #0e5f80;">Olhe nos armários</h2>
+        <button id="lookedButton">Olhei</button>
+        <button id="notLookedButton">Não quero</button>
+        <button class="back-button" onclick="goBack('message-page');">Voltar</button>
+    </div>
+
+    <div id="proposal-page">
+        <p>Você é a pessoa que escolhi trilhar todos os caminhos deste mundo. Que quis enfrentar meus piores medos, porque independente de qualquer coisa sempre me senti bem em pensar em tê-la comigo. Passamos por muitas dificuldades, medos, e infelizmente pensamos em desistir algumas vezes. Porém, se chegamos até aqui, neste momento, acho que é pra ser. Mas só depende de nós. Achei que fosse especial fazer deste modo, espero que goste. Enfim hehe. Minha eterna Buchechinha, você quer passar o resto das nossas vidas juntos? Quer casar comigo?</p>
+        <h1 style="margin-top: 20px;">💍</h1>
+        <button class="back-button" onclick="goBack('proposal-page');">Voltar</button>
+    </div>
+    
+    <script>
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerText = '❤️'; 
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 5000);
+        }
+
+        // Nova função para gerenciar o retorno
+        function goBack(currentPage) {
+            if (currentPage === 'fridge-password-page') {
+                // Se estiver na tela da geladeira, volta para o formulário inicial
+                document.getElementById('fridge-password-page').style.display = 'none';
+                document.getElementById('content').style.display = 'none';
+                document.getElementById('form-container').style.display = 'flex';
+                document.getElementById('form-container').style.opacity = '1';
+                document.body.style.backgroundImage = 'url("panda.png")';
+
+            } else if (currentPage === 'message-page') {
+                // Se estiver na tela da mensagem, volta para o conteúdo principal
+                document.getElementById('message-page').style.display = 'none';
+                document.getElementById('content').style.display = 'block';
+                document.body.style.alignItems = 'center';
+                document.body.style.justifyContent = 'center';
+
+            } else if (currentPage === 'proposal-page') {
+                // Se estiver na tela da proposta, volta para a tela de mensagem
+                document.getElementById('proposal-page').style.display = 'none';
+                document.getElementById('message-page').style.display = 'block';
+            }
+        }
+
+        document.getElementById('dateForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const correctDate = '11/10/2020';
+            const dateInput = document.getElementById('dateInput').value;
+            const message = document.getElementById('message');
+            const content = document.getElementById('content');
+            const formContainer = document.getElementById('form-container');
+            const fridgePasswordPage = document.getElementById('fridge-password-page');
+
+            if (dateInput === correctDate) {
+                message.style.color = 'green';
+                message.textContent = 'Data correta! Carregando surpresa...';
+
+                formContainer.style.opacity = '0';
+                setTimeout(() => {
+                    formContainer.style.display = 'none';
+                    content.style.display = 'block';
+
+                    document.body.style.backgroundImage = 'none';
+                    document.body.style.backgroundColor = '#f0f8ff';
+                    
+                    fridgePasswordPage.style.display = 'block';
+                    
+                    let photosHTML = '';
+                    for (let i = 1; i <= 80; i++) {
+                        photosHTML += `
+                            <div class="photo-wrapper">
+                                <img src="FOTOS (${i}).jpeg" alt="Foto ${i}">
+                            </div>
+                        `;
+                    }
+                    
+                    document.querySelector('.album').innerHTML = photosHTML;
+                    setInterval(createHeart, 300);
+
+                    const countDownDate = new Date("Nov 21, 2025 13:40:15").getTime();
+                    const x = setInterval(function() {
+                        const now = new Date().getTime();
+                        const distance = countDownDate - now;
+                        
+                        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                        
+                        document.getElementById("countdown").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+                        
+                        if (distance < 0) {
+                            clearInterval(x);
+                            document.getElementById("countdown").innerHTML = "Feliz Aniversário! ❤";
+                        }
+                    }, 1000);
+
+                }, 1000);
+            } else {
+                message.style.color = 'red';
+                message.textContent = 'Data incorreta. Tente novamente!';
+            }
+        });
+
+        document.getElementById('fridgeForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const correctFridgePhrase = 'O melhor acaso para o amor eterno.C&C';
+            const fridgeInput = document.getElementById('fridgeInput').value;
+            const fridgeMessage = document.getElementById('fridgeMessage');
+            const content = document.getElementById('content');
+            const messagePage = document.getElementById('message-page');
+
+            if (fridgeInput === correctFridgePhrase) {
+                fridgeMessage.style.color = 'green';
+                fridgeMessage.textContent = 'Frase correta! Preparando a surpresa...';
+                
+                setTimeout(() => {
+                    content.style.display = 'none';
+                    messagePage.style.display = 'block';
+                    document.body.style.alignItems = 'center';
+                    document.body.style.justifyContent = 'center';
+                    document.body.style.overflowY = 'hidden';
+                }, 1000);
+            } else {
+                fridgeMessage.style.color = 'red';
+                fridgeMessage.textContent = 'Frase incorreta. Tente novamente.';
+            }
+        });
+
+        document.getElementById('lookedButton').addEventListener('click', function() {
+            document.getElementById('message-page').style.display = 'none';
+            document.getElementById('proposal-page').style.display = 'block';
+        });
+
+        document.getElementById('notLookedButton').addEventListener('click', function() {
+            alert('Tudo bem, a surpresa fica para outro dia!');
+            window.close();
+        });
+    </script>
+</body>
+</html>
